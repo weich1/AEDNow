@@ -1,0 +1,18 @@
+[ {
+    "title": "title 1",
+    "lat": "19.1759668",
+    "lng": "72.79504659999998",
+    "description": "description 1"
+},
+{
+    "title": "title 2",
+    "lat": "19.0883595",
+    "lng": "72.82652380000002",
+    "description": "description 2"
+},
+{
+    "title": "title 3",
+    "lat": "18.9542149",
+    "lng": "72.81203529999993",
+    "description": "description 3"
+} ]
