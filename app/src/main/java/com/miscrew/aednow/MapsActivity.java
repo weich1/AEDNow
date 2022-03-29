@@ -15,14 +15,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.*;
 import com.miscrew.aednow.databinding.ActivityMapsBinding;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Mapper md;
     private ActivityMapsBinding binding;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -32,27 +37,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // create Gson instance
-        Gson gson = new Gson();
-        try {
-
-            // create a reader
-            Reader reader = Files.newBufferedReader(Paths.get("main/assets/map.json"));
-            // convert JSON file to map
-            Map<?, ?> map = gson.fromJson(reader, Map.class);
-
-            // print map entries
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + "=" + entry.getValue());
-            }
-
-            // close reader
-            reader.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -60,8 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //String js = gson.fromJson()
     }
-
-
 
     /**
      * Manipulates the map once available.
@@ -77,11 +59,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        // enable zoom and location controls
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(41.62017922107947, -93.60208950567639);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Grandview University"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // create Gson instance for JSON read
+        Gson gson = new Gson();
+        MarkerOptions moMarker = new MarkerOptions();
+
+        try {
+            // create a reader to read our JSON file
+            BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open("map.json")));
+            // read JSON map location data from file into our mapper class
+            Mapper md = gson.fromJson(reader, Mapper.class);
+
+            for(MapData x: md.mapData) {
+                // create a new location marker for each entry
+                LatLng marker = new LatLng(x.getLat(), x.getLng());
+                // set lat+lng+title+description
+                moMarker.position(marker).title(x.getTitle()).snippet(x.getDescription());
+                // add the marker to mMap
+                mMap.addMarker(moMarker);
+            }
+            // close file
+            reader.close();
+        } catch (Exception ex) {
+            System.out.println("Error reading JSON file");
+            // print exception to logcat
+            ex.printStackTrace();
+        }
+        // Grand View Marker
+        LatLng marker = new LatLng(41.62017922107947, -93.60208950567639);
+        moMarker.position(marker).title("Grandview University").snippet("Krumm Business Center");
+        mMap.addMarker(moMarker);
+        // move to grand view marker
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+        // zoom in
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
     }
 
 
