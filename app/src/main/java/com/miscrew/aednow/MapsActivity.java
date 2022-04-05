@@ -1,11 +1,27 @@
 package com.miscrew.aednow;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,19 +33,18 @@ import com.miscrew.aednow.databinding.ActivityMapsBinding;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.ListIterator;
-import java.util.Map;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    GoogleSignInClient gsc;
+    //SignInButton btnSignIn;
+    Button btnSignOut;
+    GoogleSignInAccount account;
     private Mapper md;
     private ActivityMapsBinding binding;
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,19 +57,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //String js = gson.fromJson()
+        // begin google sign-in process
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+        // btnSignIn = (SignInButton) findViewById(R.id.google_sign_in);
+        btnSignOut = (Button) findViewById(R.id.google_sign_out);
+        account = GoogleSignIn.getLastSignedInAccount(this);
+        changeButtonText();
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(account==null) {
+                    SignIn();
+                } else {
+                    SignOut();
+                }
+            }
+        });
+
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    // change button text to reflect sign-in status
+    private void changeButtonText() {
+        account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account == null) {
+            btnSignOut.setText("Sign In");
+        } else {
+            Toast.makeText(this, "Successfully signed in as user " + account.getDisplayName() + ".", Toast.LENGTH_SHORT).show();
+            btnSignOut.setText("Sign Out(" + account.getEmail() + ")");
+        }
+    }
 
+    // sign out code
+    private void SignOut() {
+        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                changeButtonText();
+            }
+        });
+    }
+    // end sign out code
+
+    // sign in code
+    private void SignIn() {
+        Intent intent = gsc.getSignInIntent();
+        startActivityForResult(intent, 100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100) {
+            Task<GoogleSignInAccount> task=GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                task.getResult(ApiException.class);
+                changeButtonText();
+            } catch (ApiException e) {
+                Toast.makeText(this, "Error signing in", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    // end sign in code
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -96,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
         // zoom in
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
-    }
 
+    }
 
 }

@@ -6,12 +6,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class MapData {
-    @SerializedName("title") // added just for sake of reference
+    @SerializedName("title")
     @Expose
     private String title;
     private double lat;
     private double lng;
-    @SerializedName("description") // added just for sake of reference
+    @SerializedName("description")
     @Expose
     private String description;
 
