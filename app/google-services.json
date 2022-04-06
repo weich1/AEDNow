@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "571573696602",
+    "project_id": "aednow",
+    "storage_bucket": "aednow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571573696602:android:529338c93e6af25c90c063",
+        "android_client_info": {
+          "package_name": "com.miscrew.aednow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571573696602-vkruvjekai9lq384tutmrapg23f68skv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXLVdfyJSHr89LXMpvuRsm7VdKpo3CX9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571573696602-vkruvjekai9lq384tutmrapg23f68skv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

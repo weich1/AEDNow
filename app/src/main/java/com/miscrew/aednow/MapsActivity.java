@@ -2,15 +2,12 @@ package com.miscrew.aednow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -79,13 +76,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // change button text to reflect sign-in status
     private void changeButtonText() {
-        account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account == null) {
-            btnSignOut.setText("Sign In");
+        //account = GoogleSignIn.getLastSignedInAccount(this);
+        if(!isLoggedIn()) {
+            btnSignOut.setText("Sign in using Google");
         } else {
             Toast.makeText(this, "Successfully signed in as user " + account.getDisplayName() + ".", Toast.LENGTH_SHORT).show();
             btnSignOut.setText("Sign Out(" + account.getEmail() + ")");
         }
+    }
+
+    private Boolean isLoggedIn() {
+        account = GoogleSignIn.getLastSignedInAccount(this);
+        return (account != null);
     }
 
     // sign out code
@@ -125,11 +127,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         // enable zoom and location controls
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+        // read in JSON map markers
+        MarkerOptions moMarker = new MarkerOptions();
+        readJSONMap(moMarker);
+
+        // Grand View Marker
+        LatLng marker = new LatLng(41.62017922107947, -93.60208950567639);
+        moMarker.position(marker).title("Grandview University").snippet("Krumm Business Center");
+        mMap.addMarker(moMarker);
+        // move to grand view marker
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+        // zoom in
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
+
+    }
+
+    private void readJSONMap(MarkerOptions moMarker) {
         // create Gson instance for JSON read
         Gson gson = new Gson();
-        MarkerOptions moMarker = new MarkerOptions();
 
         try {
             // create a reader to read our JSON file
@@ -152,15 +170,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // print exception to logcat
             ex.printStackTrace();
         }
-        // Grand View Marker
-        LatLng marker = new LatLng(41.62017922107947, -93.60208950567639);
-        moMarker.position(marker).title("Grandview University").snippet("Krumm Business Center");
-        mMap.addMarker(moMarker);
-        // move to grand view marker
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-        // zoom in
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
-
     }
-
 }
