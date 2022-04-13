@@ -1,25 +1,32 @@
 package com.miscrew.aednow;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
 public class MapData {
-    @SerializedName("title")
-    @Expose
+
+    private Marker marker;
     private String title;
+    private String imgUrl1;
+    public boolean imagesLoaded;
     private double lat;
     private double lng;
+    private int icon;
     @SerializedName("description")
     @Expose
     private String description;
 
-    public MapData(String title, double lat, double lng, String description) {
+    public MapData(String title, double lat, double lng, int icon, String description) {
         this.title = title;
         this.lat = lat;
         this.lng = lng;
+        this.icon = icon;
         this.description = description;
+        this.marker = null;
+        this.imagesLoaded = false;
     }
 
     // setters and getters
@@ -29,6 +36,14 @@ public class MapData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getImgUrl1() {
+        return imgUrl1;
+    }
+
+    public void setImgUrl1(String imgUrl1) {
+        this.imgUrl1 = imgUrl1;
     }
 
     public String getDescription() {
@@ -43,7 +58,7 @@ public class MapData {
         return lat;
     }
 
-    public void getLat(long lat) {
+    public void setLat(long lat) {
         this.lat = lat;
     }
 
@@ -51,7 +66,16 @@ public class MapData {
         return lng;
     }
 
-    public void getLng(long lng) {
+    public void setLng(long lng) {
         this.lng = lng;
     }
+
+    public int getIcon() {return icon; }
+
+    public void setIcon(int icon) {this.icon = icon; }
+
+    public Marker getMarker() { return this.marker; }
+
+    public void setMarker(Marker marker) { this.marker = marker; }
+
 }

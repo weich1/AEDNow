@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "571573696602-bmgrj0tvkd73ao2oll9fdnrtkkhfccfr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miscrew.aednow",
+            "certificate_hash": "059573732d737f36e09450ed0604827546213e51"
+          }
+        },
+        {
+          "client_id": "571573696602-n0qrlqf0lsgs5890vqddnce45bm27n6j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miscrew.aednow",
+            "certificate_hash": "bb246f961a0910f2dcc99577fde078f8ba60b9f4"
+          }
+        },
+        {
           "client_id": "571573696602-vkruvjekai9lq384tutmrapg23f68skv.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -27,7 +43,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "571573696602-vkruvjekai9lq384tutmrapg23f68skv.apps.googleusercontent.com",
+              "client_id": "571573696602-3eqif0btqm8rfhs27f0fji23llvj2i63.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
