@@ -2,9 +2,12 @@ package com.miscrew.aednow;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        configureToolbar();
         txtName = findViewById(R.id.name);
         txtEmail = findViewById(R.id.email);
         btnLogout = findViewById(R.id.logout);
@@ -54,6 +58,44 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
         });
+    }
+
+    // toolbar creation
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.menu_preferences:
+                //Start Activity here
+                Intent mIntent = new Intent(this, HomeActivity.class);
+                startActivity(mIntent);
+                break;
+        }
+        return true;
+    }
+
+    private Toolbar configureToolbar() {
+        // create toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("AEDNow");
+        //getSupportActionBar().setTitle("ADENow")
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        return toolbar;
     }
 
 }

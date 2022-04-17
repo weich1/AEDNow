@@ -4,48 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@color/white"
     tools:context=".HomeActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:text="You are logged in as:"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="70dp"
-        tools:ignore="MissingConstraints" />
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-72dp"
+        tools:layout_editor_absoluteY="192dp" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:text="Name"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="179dp"
-        tools:ignore="MissingConstraints" />
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="243dp" />
 
     <TextView
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
         android:text="Email"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="226dp"
-        tools:ignore="MissingConstraints" />
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="302dp" />
 
     <Button
         android:id="@+id/logout"
@@ -57,9 +61,8 @@
         android:text="Log Out"
         android:textColor="@color/white"
         android:textSize="22sp"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="305dp"
-        tools:ignore="MissingConstraints" />
-
+        tools:layout_editor_absoluteY="423dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
