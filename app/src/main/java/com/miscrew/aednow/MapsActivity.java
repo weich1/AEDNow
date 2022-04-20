@@ -2,8 +2,9 @@ package com.miscrew.aednow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -25,6 +27,8 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,20 +36,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.*;
 import com.miscrew.aednow.databinding.ActivityMapsBinding;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 
-public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMarkerClickListener,*/ OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMarkerClickListener,*/ OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
+    private static GoogleSignInAccount account;
     private GoogleMap mMap;
     GoogleSignInClient gsc;
     //SignInButton btnSignIn;
     Button btnSignOut;
-    GoogleSignInAccount account;
     public Mapper md;
     public Marker marker;
     private ActivityMapsBinding binding;
@@ -57,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMark
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        configureToolbar();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -69,31 +79,41 @@ public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMark
         btnSignOut = (Button) findViewById(R.id.google_sign_out);
         account = GoogleSignIn.getLastSignedInAccount(this);
         changeButtonText();
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(account==null) {
-                    SignIn();
-                } else {
-                    SignOut();
-                }
+        btnSignOut.setOnClickListener(view -> {
+            if(account==null) {
+                SignIn();
+            } else {
+                SignOut();
             }
         });
 
     }
 
+
     // change button text to reflect sign-in status
     private void changeButtonText() {
         //account = GoogleSignIn.getLastSignedInAccount(this);
         if(!isLoggedIn()) {
-            btnSignOut.setText("Sign in using Google");
+            btnSignOut.setText("Sign in via Google");
         } else {
-            Toast.makeText(this, "Successfully signed in as user " + account.getDisplayName() + ".", Toast.LENGTH_SHORT).show();
-            btnSignOut.setText("Sign Out(" + account.getEmail() + ")");
+            Snackbar.make(findViewById(R.id.MapsCoordinator), "Successfully signed in as user " + account.getDisplayName() + ".", Snackbar.LENGTH_SHORT).show();
+            btnSignOut.setText("Sign Out");
         }
     }
 
-    private Boolean isLoggedIn() {
+    private Toolbar configureToolbar() {
+        // create toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("AEDNow");
+        //getSupportActionBar().setTitle("ADENow")
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        return toolbar;
+    }
+
+    public Boolean isLoggedIn() {
         account = GoogleSignIn.getLastSignedInAccount(this);
         return (account != null);
     }
@@ -124,11 +144,38 @@ public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMark
                 task.getResult(ApiException.class);
                 changeButtonText();
             } catch (ApiException e) {
-                Toast.makeText(this, "Error signing in", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.MapsCoordinator), "Error signing in", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
     // end sign in code
+
+    // toolbar creation
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.menu_preferences:
+                //Start Activity here
+                Intent mIntent = new Intent(this, HomeActivity.class);
+                startActivity(mIntent);
+                break;
+        }
+        return true;
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -137,25 +184,19 @@ public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMark
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
+        mMap.setOnMapLongClickListener(this);
         // read in JSON map markers
         readJSONMap();
 
-        /* Grand View Marker
-        MarkerOptions moMarker = new MarkerOptions();
-        LatLng marker = new LatLng(41.62017922107947, -93.60208950567639);
-        moMarker.position(marker).title("Grandview University").snippet("Krumm Business Center");
-        mMap.addMarker(moMarker);*/
-        // move to grand view marker
         LatLng marker = new LatLng(41.62017922107947, -93.60208950567639);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
         // zoom in
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
 
         //googleMap.setOnMarkerClickListener(this);
-
-        mMap.setInfoWindowAdapter(new CustomMarkerWindow(this, md));
-
+        CustomMarkerWindow infoWin = new CustomMarkerWindow(this, md);
+        mMap.setInfoWindowAdapter(infoWin);
+        mMap.setOnInfoWindowLongClickListener(infoWin);
     }
 
 
@@ -211,6 +252,7 @@ public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMark
             reader.close();
         } catch (Exception ex) {
             System.out.println("Error reading JSON file");
+            Toast.makeText(this, "Error reading map markers from JSON file", Toast.LENGTH_SHORT).show();
             // print exception to logcat
             ex.printStackTrace();
         }
@@ -235,4 +277,20 @@ public class MapsActivity extends FragmentActivity implements /*GoogleMap.OnMark
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+        if(isLoggedIn()) {
+            Intent mIntent = new Intent(this, AddActivity.class);
+            mIntent.putExtra("lat", latLng.latitude);
+            mIntent.putExtra("lng", latLng.longitude);
+            startActivity(mIntent);
+        } else Toast.makeText(this, "Lat Lng: " + latLng.latitude + "x" + latLng.longitude, Toast.LENGTH_SHORT).show();
+
+    }
+
+   /*private String LoadIcon(Context context, String path) {
+        ImageView imgv = new ImageView(context);
+        Picasso.get().load("").into(imgv);
+        imgv.to
+    }*/
 }

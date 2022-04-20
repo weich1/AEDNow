@@ -1,19 +1,28 @@
 package com.miscrew.aednow;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.squareup.picasso.Picasso;
 
-public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter {
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
+public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowLongClickListener {
     private Mapper markerSet;
     private Context context;
     private View myContentsView;
+    private ViewGroup mcv2;
 
     public CustomMarkerWindow(Context context, Mapper markerSet) {
         this.context = context;
@@ -30,10 +39,10 @@ public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         myContentsView = inflater.inflate(R.layout.map_info_content, null);
-
         ImageView image1 = (ImageView) myContentsView.findViewById(R.id.img1);
         TextView title = (TextView) myContentsView.findViewById(R.id.title);
         TextView snippet = (TextView) myContentsView.findViewById(R.id.snippet);
+
         for(MapData x: markerSet.mapData) {
             if (x.getMarker().getId().equals(marker.getId())) {
                 title.setText(x.getTitle());
@@ -53,5 +62,21 @@ public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter {
             }
         }
             return myContentsView;
+    }
+
+
+    @Override
+    public void onInfoWindowLongClick(@NonNull Marker marker) {
+        for(MapData x: markerSet.mapData) {
+            if (x.getMarker().getId().equals(marker.getId())) {
+                System.out.println("Long-click");
+                //if(MapsActivity.isLoggedIn()) {
+                    /*Intent mIntent = new Intent(this, AddActivity.class);
+                    mIntent.putExtra("lat", latLng.latitude);
+                    mIntent.putExtra("lng", latLng.longitude);
+                    startActivity(mIntent);*/
+                //}
+            }
+        }
     }
 }
