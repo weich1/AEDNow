@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,21 +36,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.*;
 import com.miscrew.aednow.databinding.ActivityMapsBinding;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 
-public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMarkerClickListener,*/ OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMarkerClickListener,*/ OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
+    private static GoogleSignInAccount account;
     private GoogleMap mMap;
     GoogleSignInClient gsc;
     //SignInButton btnSignIn;
     Button btnSignOut;
-    GoogleSignInAccount account;
     public Mapper md;
     public Marker marker;
     private ActivityMapsBinding binding;
@@ -61,8 +67,6 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
         setContentView(binding.getRoot());
 
         configureToolbar();
-
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -92,7 +96,7 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
         if(!isLoggedIn()) {
             btnSignOut.setText("Sign in via Google");
         } else {
-            Toast.makeText(this, "Successfully signed in as user " + account.getDisplayName() + ".", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.MapsCoordinator), "Successfully signed in as user " + account.getDisplayName() + ".", Snackbar.LENGTH_SHORT).show();
             btnSignOut.setText("Sign Out");
         }
     }
@@ -109,7 +113,7 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
         return toolbar;
     }
 
-    private Boolean isLoggedIn() {
+    public Boolean isLoggedIn() {
         account = GoogleSignIn.getLastSignedInAccount(this);
         return (account != null);
     }
@@ -140,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
                 task.getResult(ApiException.class);
                 changeButtonText();
             } catch (ApiException e) {
-                Toast.makeText(this, "Error signing in", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.MapsCoordinator), "Error signing in", Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -180,7 +184,7 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
+        mMap.setOnMapLongClickListener(this);
         // read in JSON map markers
         readJSONMap();
 
@@ -192,7 +196,7 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
         //googleMap.setOnMarkerClickListener(this);
         CustomMarkerWindow infoWin = new CustomMarkerWindow(this, md);
         mMap.setInfoWindowAdapter(infoWin);
-        mMap.setOnInfoWindowClickListener(infoWin);
+        mMap.setOnInfoWindowLongClickListener(infoWin);
     }
 
 
@@ -271,6 +275,17 @@ public class MapsActivity extends AppCompatActivity implements /*GoogleMap.OnMar
 
         // after generating our bitmap we are returning our bitmap.
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+        if(isLoggedIn()) {
+            Intent mIntent = new Intent(this, AddActivity.class);
+            mIntent.putExtra("lat", latLng.latitude);
+            mIntent.putExtra("lng", latLng.longitude);
+            startActivity(mIntent);
+        } else Toast.makeText(this, "Lat Lng: " + latLng.latitude + "x" + latLng.longitude, Toast.LENGTH_SHORT).show();
+
     }
 
    /*private String LoadIcon(Context context, String path) {

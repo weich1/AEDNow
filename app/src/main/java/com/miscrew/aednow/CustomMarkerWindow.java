@@ -1,6 +1,7 @@
 package com.miscrew.aednow;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
+public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowLongClickListener {
     private Mapper markerSet;
     private Context context;
     private View myContentsView;
@@ -65,10 +66,16 @@ public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMa
 
 
     @Override
-    public void onInfoWindowClick(@NonNull Marker marker) {
+    public void onInfoWindowLongClick(@NonNull Marker marker) {
         for(MapData x: markerSet.mapData) {
             if (x.getMarker().getId().equals(marker.getId())) {
-                System.out.println("Text");
+                System.out.println("Long-click");
+                //if(MapsActivity.isLoggedIn()) {
+                    /*Intent mIntent = new Intent(this, AddActivity.class);
+                    mIntent.putExtra("lat", latLng.latitude);
+                    mIntent.putExtra("lng", latLng.longitude);
+                    startActivity(mIntent);*/
+                //}
             }
         }
     }

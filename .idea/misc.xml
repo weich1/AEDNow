@@ -6,9 +6,13 @@
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.136" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/drawable/ic_gold_star_background.xml" value="0.136" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1085" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/activity_add.xml" value="0.165" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/activity_home.xml" value="0.1" />
-        <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/activity_maps.xml" value="0.14945652173913043" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/activity_maps.xml" value="0.11" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/fragment_first.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/fragment_login.xml" value="0.1342451874366768" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/fragment_second.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/layout.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/map_info_content.xml" value="0.335" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/AEDNow/app/src/main/res/layout/menu.xml" value="0.11854103343465046" />

@@ -10,9 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AEDNow">
         <activity
+            android:name=".AddActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
-
         <activity
             android:name=".MapsActivity"
             android:exported="true"

@@ -22,7 +22,7 @@ import com.google.android.gms.tasks.Task;
 public class HomeActivity extends AppCompatActivity {
 
     TextView txtName, txtEmail;
-    Button btnLogout;
+    Button btnLogout, btnRevoke;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
@@ -34,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
         txtName = findViewById(R.id.name);
         txtEmail = findViewById(R.id.email);
         btnLogout = findViewById(R.id.logout);
+        btnRevoke = findViewById(R.id.revoke);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
 
@@ -48,6 +49,13 @@ public class HomeActivity extends AppCompatActivity {
                SignOut();
            }
         });
+
+        btnRevoke.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                revokeAccess();
+            }
+        });
     }
 
     private void SignOut() {
@@ -60,11 +68,23 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void revokeAccess() {
+        gsc.revokeAccess()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        finish();
+                        SignOut();
+                        onBackPressed();
+                    }
+                });
+    }
+
     // toolbar creation
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -89,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
     private Toolbar configureToolbar() {
         // create toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("AEDNow");
+        toolbar.setTitle("Settings");
         //getSupportActionBar().setTitle("ADENow")
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
