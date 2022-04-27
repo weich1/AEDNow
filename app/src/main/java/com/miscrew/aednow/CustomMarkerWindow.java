@@ -13,12 +13,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Modifier;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowLongClickListener {
+public class CustomMarkerWindow extends AppCompatActivity implements GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowLongClickListener {
     private Mapper markerSet;
     private Context context;
     private View myContentsView;
@@ -44,7 +49,7 @@ public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMa
         TextView snippet = (TextView) myContentsView.findViewById(R.id.snippet);
 
         for(MapData x: markerSet.mapData) {
-            if (x.getMarker().getId().equals(marker.getId())) {
+            if (x.getMarker().equals(marker.getId())) {
                 title.setText(x.getTitle());
                 snippet.setText(x.getDescription());
                 if (x.imagesLoaded) {
@@ -68,8 +73,17 @@ public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMa
     @Override
     public void onInfoWindowLongClick(@NonNull Marker marker) {
         for(MapData x: markerSet.mapData) {
-            if (x.getMarker().getId().equals(marker.getId())) {
-                System.out.println("Long-click");
+            if (x.getMarker().equals(marker.getId())) {
+                try {
+                    Intent mIntent = new Intent(context, InfoExpandActivity.class);
+
+                    //Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().excludeFieldsWithModifiers(Modifier.PUBLIC).create();
+                    Gson gson = new Gson();
+                    mIntent.putExtra("mapdata", gson.toJson(x)); // package up map marker data into intent
+                   context.startActivity(mIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 //if(MapsActivity.isLoggedIn()) {
                     /*Intent mIntent = new Intent(this, AddActivity.class);
                     mIntent.putExtra("lat", latLng.latitude);
@@ -79,4 +93,6 @@ public class CustomMarkerWindow implements GoogleMap.InfoWindowAdapter, GoogleMa
             }
         }
     }
+
+
 }

@@ -4,6 +4,7 @@
         "lat": "41.62030047708986",
         "lng": "-93.60321937984267",
         "icon": "2131165306",
+        "votes": "9",
         "imgUrl1": "https://www.henryford.com/-/media/henry-ford-blog/images/mobile-interior-banner-images/2018/10/aed-box.jpg",
         "description": "AED location example 1"
     },
@@ -13,6 +14,7 @@
         "lng": "-93.60257564971042",
         "imgUrl1": "https://cdn.aarp.net/content/dam/aarp/health/healthy-living/2017/09/1140-how-to-save-life-defibillator-aarp.jpg",
         "icon": "0",
+        "votes": "10",
         "description": "AED location example 2"
     },
     {
@@ -21,6 +23,7 @@
         "lng": "-93.60291561968651",
         "imgUrl1": "https://education.missouri.edu/scoop/wp-content/uploads/sites/17/2019/08/defib.jpg",
         "icon": "0",
+        "votes": "-1",
         "description": "AED location example 3"
     }]
 }
