@@ -8,16 +8,27 @@ import java.util.ArrayList;
 
 public class MapData {
 
-    private Marker marker;
+    private String marker;
     private String title;
     private String imgUrl1;
     public boolean imagesLoaded;
     private double lat;
     private double lng;
+    private int votes;
     private int icon;
-    @SerializedName("description")
-    @Expose
+    //@SerializedName("description")
+    //@Expose
     private String description;
+
+    public MapData(String title, double lat, double lng, int icon, String description, String markerId) {
+        this.title = title;
+        this.lat = lat;
+        this.lng = lng;
+        this.icon = icon;
+        this.description = description;
+        this.marker = markerId;
+        this.imagesLoaded = false;
+    }
 
     public MapData(String title, double lat, double lng, int icon, String description) {
         this.title = title;
@@ -28,6 +39,8 @@ public class MapData {
         this.marker = null;
         this.imagesLoaded = false;
     }
+
+
 
     // setters and getters
     public String getTitle() {
@@ -74,8 +87,12 @@ public class MapData {
 
     public void setIcon(int icon) {this.icon = icon; }
 
-    public Marker getMarker() { return this.marker; }
+    public int getVotes() {return votes; }
 
-    public void setMarker(Marker marker) { this.marker = marker; }
+    public void setVotes(int votes) {this.votes = votes; }
+
+    public String getMarker() { return this.marker; }
+
+    public void setMarker(String marker) { this.marker = marker; }
 
 }
