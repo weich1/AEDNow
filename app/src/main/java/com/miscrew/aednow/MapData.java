@@ -10,8 +10,7 @@ public class MapData {
 
     private String marker;
     private String title;
-    private String imgUrl1;
-    public boolean imagesLoaded;
+    private String[] images;
     private double lat;
     private double lng;
     private int votes;
@@ -27,7 +26,6 @@ public class MapData {
         this.icon = icon;
         this.description = description;
         this.marker = markerId;
-        this.imagesLoaded = false;
     }
 
     public MapData(String title, double lat, double lng, int icon, String description) {
@@ -37,7 +35,6 @@ public class MapData {
         this.icon = icon;
         this.description = description;
         this.marker = null;
-        this.imagesLoaded = false;
     }
 
 
@@ -51,12 +48,12 @@ public class MapData {
         this.title = title;
     }
 
-    public String getImgUrl1() {
-        return imgUrl1;
+    public String[] getImages() {
+        return images;
     }
 
-    public void setImgUrl1(String imgUrl1) {
-        this.imgUrl1 = imgUrl1;
+    public void setImgUrl1(String []images) {
+        this.images = images;
     }
 
     public String getDescription() {
@@ -87,9 +84,9 @@ public class MapData {
 
     public void setIcon(int icon) {this.icon = icon; }
 
-    public int getVotes() {return votes; }
+    public int getVotes() { return votes; }
 
-    public void setVotes(int votes) {this.votes = votes; }
+    public void setVotes(int votes) { this.votes = votes; }
 
     public String getMarker() { return this.marker; }
 

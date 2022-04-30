@@ -3,11 +3,14 @@ package com.miscrew.aednow;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,31 +47,37 @@ public class CustomMarkerWindow extends AppCompatActivity implements GoogleMap.I
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         myContentsView = inflater.inflate(R.layout.map_info_content, null);
-        ImageView image1 = (ImageView) myContentsView.findViewById(R.id.img1);
-        TextView title = (TextView) myContentsView.findViewById(R.id.title);
-        TextView snippet = (TextView) myContentsView.findViewById(R.id.snippet);
-
+        TextView title = myContentsView.findViewById(R.id.title);
+        TextView snippet = myContentsView.findViewById(R.id.snippet);
+        ViewGroup layoutImages = (ViewGroup) myContentsView.findViewById(R.id.layoutImages);
         for(MapData x: markerSet.mapData) {
             if (x.getMarker().equals(marker.getId())) {
                 title.setText(x.getTitle());
                 snippet.setText(x.getDescription());
-                if (x.imagesLoaded) {
+                for(String imgUrl: x.getImages()) {
+                    ImageView imgView = new ImageView(myContentsView.getContext());
+                    imgView.setLayoutParams(new FrameLayout.LayoutParams(150, 150, Gravity.CENTER));
+                    imgView.setTextAlignment(FrameLayout.TEXT_ALIGNMENT_CENTER);
+                    imgView.setEnabled(true);
+                    loadImage(imgView, imgUrl);
+                    layoutImages.addView(imgView);
                     Picasso.get()
-                            .load(x.getImgUrl1())
-                            .placeholder(R.drawable.ic_launcher_background)
-                            .into(image1);
-                } else {
-                    x.imagesLoaded = true;
-                    Picasso.get()
-                            .load(x.getImgUrl1())
-                            .placeholder(R.drawable.ic_launcher_background)
-                            .into(image1, new InfoWindowRefresher(marker));
+                            .load(imgUrl)
+                            .placeholder(R.mipmap.ic_launcher)
+                            .into(imgView, new InfoWindowRefresher(marker, imgUrl, imgView));
                 }
             }
         }
             return myContentsView;
     }
 
+    private void loadImage(ImageView img, String url) {
+        if(url.length() == 0) return;
+        Picasso.get()
+                .load(url)
+                .placeholder(R.mipmap.ic_launcher)
+                .into(img);
+    }
 
     @Override
     public void onInfoWindowLongClick(@NonNull Marker marker) {
@@ -79,17 +88,12 @@ public class CustomMarkerWindow extends AppCompatActivity implements GoogleMap.I
 
                     //Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().excludeFieldsWithModifiers(Modifier.PUBLIC).create();
                     Gson gson = new Gson();
+                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mIntent.putExtra("mapdata", gson.toJson(x)); // package up map marker data into intent
                    context.startActivity(mIntent);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //if(MapsActivity.isLoggedIn()) {
-                    /*Intent mIntent = new Intent(this, AddActivity.class);
-                    mIntent.putExtra("lat", latLng.latitude);
-                    mIntent.putExtra("lng", latLng.longitude);
-                    startActivity(mIntent);*/
-                //}
             }
         }
     }

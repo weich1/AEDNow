@@ -12,19 +12,25 @@
         android:text="Placeholder title"
         android:textAlignment="center"
         android:textFontWeight="1000"
-        android:textSize="40dp" />
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/snippet"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Placeholder description"
-        android:textSize="30dp" />
+        android:textSize="15dp" />
 
-    <ImageView
-        android:id="@+id/img1"
+    <LinearLayout
+        android:id="@+id/layoutImages"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Placeholder title"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
+    </LinearLayout>
 
 
 </LinearLayout>
