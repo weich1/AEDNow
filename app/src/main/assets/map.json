@@ -3,27 +3,29 @@
         "title": "AED 1",
         "lat": "41.62030047708986",
         "lng": "-93.60321937984267",
-        "icon": "2131165306",
+        "icon": "0",
         "votes": "9",
-        "imgUrl1": "https://www.henryford.com/-/media/henry-ford-blog/images/mobile-interior-banner-images/2018/10/aed-box.jpg",
+        "images": ["https://www.henryford.com/-/media/henry-ford-blog/images/mobile-interior-banner-images/2018/10/aed-box.jpg"],
         "description": "AED location example 1"
     },
     {
         "title": "AED 2",
         "lat": "41.62016914161818",
         "lng": "-93.60257564971042",
-        "imgUrl1": "https://cdn.aarp.net/content/dam/aarp/health/healthy-living/2017/09/1140-how-to-save-life-defibillator-aarp.jpg",
         "icon": "0",
         "votes": "10",
+        "images": ["https://cdn.aarp.net/content/dam/aarp/health/healthy-living/2017/09/1140-how-to-save-life-defibillator-aarp.jpg",
+        "https://firebasestorage.googleapis.com/v0/b/aednow.appspot.com/o/AEDLocRequests%2Fimages%2F09e0c610-7a1d-4455-99d8-d3eed55145cb?alt=media&token=73b3fb52-ac2f-487d-a0a2-4c9e36c843a9",
+        "https://firebasestorage.googleapis.com/v0/b/aednow.appspot.com/o/AEDLocRequests%2Fimages%2F13c8a8b1-1931-4d10-acf7-b9740bb57c59?alt=media&token=48d5c275-fd89-443f-bc72-be33f51191d6"],
         "description": "AED location example 2"
     },
     {
         "title": "AED 3",
         "lat": "41.62029746941029",
         "lng": "-93.60291561968651",
-        "imgUrl1": "https://education.missouri.edu/scoop/wp-content/uploads/sites/17/2019/08/defib.jpg",
         "icon": "0",
         "votes": "-1",
+        "images": ["https://education.missouri.edu/scoop/wp-content/uploads/sites/17/2019/08/defib.jpg"],
         "description": "AED location example 3"
     }]
 }
